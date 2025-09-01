@@ -1,0 +1,361 @@
+/* @media principal: para pantallas de tamaño standard de PC y laptops */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    background: #fff;
+    height: 100%;
+    font-size: 1.2em;
+    font-family: luckiestguy, Verdana, Tahoma, sans-serif;
+    color: #180f2a;
+    overflow: hidden;
+}
+
+/* Agregar fuente luckiestguy */
+
+@font-face {
+    font-family: 'luckiestguy';
+    src: url('Font/luckiestguy.ttf') format('truetype');
+}
+
+#contenedor {
+    background-image: url("Assets/1.png");
+    background-position: top;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    outline: 0;
+    overflow: hidden;
+}
+
+section {
+    display: block;
+}
+
+#juego, #juego-terminado, #instrucciones, #principal {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -900px;
+}
+
+/* Transición que da el efecto de aparecer desde arriba */
+
+#juego.current, #juego-terminado.current, #instrucciones.current, #principal.current {
+    top: 0;
+    transition: top 1s;
+    /* Para compatibilidad con mayoría de navegadores */
+    -webkit-transition: top 1s;
+    -moz-transition: top 1s;
+    -o-transition: top 1s;
+    -ms-transition: top 1s;
+}
+
+.pantalla-menu {
+    display: flex;
+    margin-top: 30px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
+
+.pantalla-menu div {
+    margin: 20px 0px;
+}
+
+/* Estilos del botón del audio */
+
+.pantalla-menu .audio-div {
+    display: flex;
+    margin: 0px !important;
+    padding-right: 50px;
+    flex-direction: row;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+.pantalla-menu .gran-titulo {
+    display: flex;
+    flex-direction: column;
+}
+
+.pantalla-menu .gran-titulo span {
+    font-size: 2.4em;
+    font-weight: 500;
+    color: #223e65;
+}
+
+.pantalla-menu .gran-titulo p {
+    padding: 0px 20px;
+    font-size: 1.2em;
+    font-weight: 200;
+    color: #180f2a;
+}
+
+.pantalla-menu .puntaje {
+    display: flex;
+    background-image: url("Assets/fondomimet.jpg"); /* tu imagen */
+    margin: 10px 50px;
+    padding: 10px 0px;
+    font-size: 1.5em;
+    color: #111212;
+    border: 3px solid;
+    border-color: #f4f1e0;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.pantalla-menu .puntaje .espaciado {
+    margin-right: 20px;
+}
+
+/* Estilos de los botones */
+
+.pantalla-menu .botones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pantalla-menu .botones button {
+    background: #f4f1e0;
+    width: 350px;
+    font-family: luckiestguy, Verdana, Tahoma, sans-serif;
+    font-size: 1.3em;
+    color: #180f2a;
+    margin-bottom: 15px;
+    padding: 15px 0px;
+    border-radius: 15px;
+}
+
+/* Agregar efecto al colocar cursor sobre botones */
+
+.pantalla-menu .botones button:hover {
+    background-color: #180f2a;
+    color: #f4f1e0;
+    cursor: pointer;
+    box-shadow: 5px 5px 2px grey;
+}
+
+/* Estilos del copyleft */
+
+.copyleft-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#copyleft {
+    height: 100%;
+    width: 330px;
+}
+
+#copyleft .color {
+    color: #223e65;
+}
+
+#copyleft:hover span.copyright span {
+    display: none;
+}
+
+#copyleft:hover span.copyright:after {
+    content: "super reservados";
+}
+
+#copyleft:hover span.copy {
+    display: inline-block;
+
+}
+
+#personajes div.dentro-instrucciones {
+    position: absolute;
+    top: -900px;
+}
+
+.pantalla-menu .titulo {
+    margin: 20px 20px;
+    font-size: 1.5em;
+    font-weight: 300;
+}
+
+.pantalla-menu .imagenes img {
+    margin: 0px 10px;
+}
+
+.pantalla-menu .descripcion b {
+    color: #223e65;
+}
+
+.pantalla-menu .imagenes-direcciones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px !important;
+}
+
+/* Bloque de animación de personaje para que camine a la derecha */
+
+.derecha {
+    display: flex;
+    flex-direction: row;
+    margin: 0px !important;
+}
+
+#eze-derecha {
+    background-image: url("Assets/eze_derecha.png");
+    height: 64px;
+    width: 57px;
+    animation: caminaderecha 1s steps(4) infinite;
+    -ms-animation: caminaderecha 1s steps(4) infinite;
+    -webkit-animation: caminaderecha 1s steps(4) infinite;
+    -moz-animation: caminaderecha 1s steps(4) infinite;
+    -o-animation: caminaderecha 1s steps(4) infinite;
+}
+
+.flecha-derecha {
+    background-image: url("Assets/flecha_derecha.png");
+    height: 64px;
+    width: 64px;
+}
+
+@keyframes caminaderecha {
+    100% {
+        background-position: -228px;
+    }
+}
+
+/* Bloque de animación de personaje para que camine a la izquierda */
+
+.izquierda {
+    display: flex;
+    flex-direction: row;
+    margin: 0px !important;
+}
+
+.flecha-izquierda {
+    background-image: url("Assets/flecha_izquierda.png");
+    height: 64px;
+    width: 64px;
+}
+
+#eze-izquierda {
+    background-image: url("Assets/eze_izquierda.png");
+    height: 64px;
+    width: 57px;
+    animation: caminaizquierda 1s steps(4) infinite;
+}
+
+@keyframes caminaizquierda {
+    100% {
+        background-position: -228px;
+    }
+}
+
+/* Para que no aparezca el cursor del mouse dentro del juego */
+
+#juego {
+    cursor: none;
+}
+
+#puntaje-info {
+    position: absolute;
+    width: 100%;
+    padding: 5px 0;
+}
+
+#dulzura, #puntaje {
+    padding-left: 20px;
+    font-size: 1.4em;
+    font-weight: 300;
+    color: #fff;
+}
+
+/* Estilos de los output pertenecientes al puntaje */
+
+#dulzura output, #puntaje output {
+    right: 20px;
+}
+
+/* Medidas del Canvas */
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Acompaña a función "cambia-background" en script.js */
+
+#cambia-background {
+    background-image: url("Assets/1.png");
+    background-size: cover;
+    transition: 1s ease-in-out;
+    /* Para compatibilidad con mayoría de navegadores */
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -webkit-transition: 1s ease-in-out;
+    -moz-transition: 1s ease-in-out;
+    -o-transition: 1s ease-in-out;
+    -ms-transition: 1s ease-in-out;
+}
+
+/* Mensaje del Juego Terminado */
+
+.mensaje {
+    font-size: 1.6em;
+    font-weight: 300;
+    color: #223e65;
+}
+
+/* @media responsiva: para pantallas de tamaño standard (width: 480px) de celulares y tablets */
+
+@media (max-width: 480px) {
+    .pantalla-menu {
+        margin-top: 20px;
+    }
+    .pantalla-menu div {
+        margin-top: 5px;
+    }
+    .pantalla-menu .audio-div {
+        padding-right: 25px;
+        margin: 0px !important;
+    }
+    .pantalla-menu .audio-div img {
+        width: 45px;
+        height: 45px;
+    }
+    .pantalla-menu .gran-titulo span {
+        font-size: 2.2em;
+    }
+    .pantalla-menu .gran-titulo p {
+        font-size: 1em;
+    }
+    .pantalla-menu .puntaje {
+        margin: 5px 20px;
+        padding: 5px;
+        font-size: 1.2em;
+    }
+    .pantalla-menu .puntaje .espaciado {
+        margin-right: 0px;
+    }
+    .pantalla-menu .descripcion {
+        font-size: 0.9em;
+        margin: 0px 10px 5px;
+    }
+    .pantalla-menu .botones button {
+        width: 300px;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    #dulzura, #puntaje {
+        padding-left: 10px;
+        font-size: 1.2em;
+    }
+    .mensaje {
+        margin: 5px 0px;
+        font-size: 1.2em;
+    }
+}
