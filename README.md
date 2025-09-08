@@ -1,4 +1,4 @@
-# Proyecto: "Practicando  funcionalidades en JavaScpits"
+# Proyecto: "Practicando  funcionalidades en JavaScpit"
 Teclab 2025
 Tecnologías utilizadas: 
 HTML5, CSS3 y JavaScript
