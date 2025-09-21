@@ -1,21 +1,19 @@
-/* @media principal: para pantallas de tamaño standard de PC y laptops */
-
+/* Reset */
 * {
     margin: 0;
     padding: 0;
 }
 
 body, html {
-    background: #fff;
+    background: #000;
     height: 100%;
     font-size: 1.2em;
     font-family: luckiestguy, Verdana, Tahoma, sans-serif;
-    color: #180f2a;
+    color: #f0f0f0;
     overflow: hidden;
 }
 
-/* Agregar fuente luckiestguy */
-
+/* Fuente custom */
 @font-face {
     font-family: 'luckiestguy';
     src: url('Font/luckiestguy.ttf') format('truetype');
@@ -24,13 +22,14 @@ body, html {
 #contenedor {
     background-image: url("Assets/1.png");
     background-position: top;
+    background-size: cover;
     position: relative;
     height: 100%;
     width: 100%;
-    outline: 0;
     overflow: hidden;
 }
 
+/* Secciones */
 section {
     display: block;
 }
@@ -42,18 +41,13 @@ section {
     top: -900px;
 }
 
-/* Transición que da el efecto de aparecer desde arriba */
-
+/* Transición */
 #juego.current, #juego-terminado.current, #instrucciones.current, #principal.current {
     top: 0;
     transition: top 1s;
-    /* Para compatibilidad con mayoría de navegadores */
-    -webkit-transition: top 1s;
-    -moz-transition: top 1s;
-    -o-transition: top 1s;
-    -ms-transition: top 1s;
 }
 
+/* Pantallas de menú */
 .pantalla-menu {
     display: flex;
     margin-top: 30px;
@@ -66,8 +60,7 @@ section {
     margin: 20px 0px;
 }
 
-/* Estilos del botón del audio */
-
+/* Audio */
 .pantalla-menu .audio-div {
     display: flex;
     margin: 0px !important;
@@ -77,6 +70,7 @@ section {
     cursor: pointer;
 }
 
+/* Títulos */
 .pantalla-menu .gran-titulo {
     display: flex;
     flex-direction: column;
@@ -84,26 +78,28 @@ section {
 
 .pantalla-menu .gran-titulo span {
     font-size: 2.4em;
-    font-weight: 500;
-    color: #223e65;
+    font-weight: 700;
+    color: #c5ff7a;
+    text-shadow: 2px 2px 4px #000;
 }
 
 .pantalla-menu .gran-titulo p {
     padding: 0px 20px;
     font-size: 1.2em;
-    font-weight: 200;
-    color: #180f2a;
+    font-weight: 300;
+    color: #ddd;
 }
 
+/* Puntaje en menú */
 .pantalla-menu .puntaje {
     display: flex;
-    background-image: url("Assets/fondomimet.jpg"); /* tu imagen */
+    background-image: url("Assets/fondomimet.jpg");
     margin: 10px 50px;
     padding: 10px 0px;
-    font-size: 1.5em;
-    color: #111212;
-    border: 3px solid;
-    border-color: #f4f1e0;
+    font-size: 1.4em;
+    color: #f0f0f0;
+    border: 3px solid #c5ff7a;
+    border-radius: 10px;
     flex-direction: row;
     justify-content: center;
 }
@@ -112,8 +108,7 @@ section {
     margin-right: 20px;
 }
 
-/* Estilos de los botones */
-
+/* Botones */
 .pantalla-menu .botones {
     display: flex;
     flex-direction: column;
@@ -121,27 +116,26 @@ section {
 }
 
 .pantalla-menu .botones button {
-    background: #f4f1e0;
-    width: 350px;
+    background: #222;
+    border: 2px solid #c5ff7a;
+    width: 300px;
     font-family: luckiestguy, Verdana, Tahoma, sans-serif;
     font-size: 1.3em;
-    color: #180f2a;
+    color: #c5ff7a;
     margin-bottom: 15px;
-    padding: 15px 0px;
+    padding: 12px 0px;
     border-radius: 15px;
+    transition: all 0.3s;
 }
-
-/* Agregar efecto al colocar cursor sobre botones */
 
 .pantalla-menu .botones button:hover {
-    background-color: #180f2a;
-    color: #f4f1e0;
+    background-color: #c5ff7a;
+    color: #111;
     cursor: pointer;
-    box-shadow: 5px 5px 2px grey;
+    box-shadow: 4px 4px 8px #000;
 }
 
-/* Estilos del copyleft */
-
+/* Copyleft */
 .copyleft-div {
     display: flex;
     flex-direction: row;
@@ -151,25 +145,14 @@ section {
 #copyleft {
     height: 100%;
     width: 330px;
+    font-size: 1em;
 }
 
 #copyleft .color {
-    color: #223e65;
+    color: #c5ff7a;
 }
 
-#copyleft:hover span.copyright span {
-    display: none;
-}
-
-#copyleft:hover span.copyright:after {
-    content: "super reservados";
-}
-
-#copyleft:hover span.copy {
-    display: inline-block;
-
-}
-
+/* Instrucciones */
 #personajes div.dentro-instrucciones {
     position: absolute;
     top: -900px;
@@ -177,16 +160,19 @@ section {
 
 .pantalla-menu .titulo {
     margin: 20px 20px;
-    font-size: 1.5em;
-    font-weight: 300;
+    font-size: 1.6em;
+    font-weight: 500;
+    color: #c5ff7a;
 }
 
 .pantalla-menu .imagenes img {
     margin: 0px 10px;
+    width: 64px;
+    height: auto;
 }
 
 .pantalla-menu .descripcion b {
-    color: #223e65;
+    color: #c5ff7a;
 }
 
 .pantalla-menu .imagenes-direcciones {
@@ -196,8 +182,7 @@ section {
     margin: 0px !important;
 }
 
-/* Bloque de animación de personaje para que camine a la derecha */
-
+/* Animaciones de movimiento */
 .derecha {
     display: flex;
     flex-direction: row;
@@ -209,10 +194,6 @@ section {
     height: 64px;
     width: 57px;
     animation: caminaderecha 1s steps(4) infinite;
-    -ms-animation: caminaderecha 1s steps(4) infinite;
-    -webkit-animation: caminaderecha 1s steps(4) infinite;
-    -moz-animation: caminaderecha 1s steps(4) infinite;
-    -o-animation: caminaderecha 1s steps(4) infinite;
 }
 
 .flecha-derecha {
@@ -222,23 +203,13 @@ section {
 }
 
 @keyframes caminaderecha {
-    100% {
-        background-position: -228px;
-    }
+    100% { background-position: -228px; }
 }
-
-/* Bloque de animación de personaje para que camine a la izquierda */
 
 .izquierda {
     display: flex;
     flex-direction: row;
     margin: 0px !important;
-}
-
-.flecha-izquierda {
-    background-image: url("Assets/flecha_izquierda.png");
-    height: 64px;
-    width: 64px;
 }
 
 #eze-izquierda {
@@ -248,114 +219,84 @@ section {
     animation: caminaizquierda 1s steps(4) infinite;
 }
 
+.flecha-izquierda {
+    background-image: url("Assets/flecha_izquierda.png");
+    height: 64px;
+    width: 64px;
+}
+
 @keyframes caminaizquierda {
-    100% {
-        background-position: -228px;
-    }
+    100% { background-position: -228px; }
 }
 
-/* Para que no aparezca el cursor del mouse dentro del juego */
+/* Cursor */
+#juego { cursor: none; }
 
-#juego {
-    cursor: none;
-}
-
+/* HUD */
 #puntaje-info {
     position: absolute;
     width: 100%;
     padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 #dulzura, #puntaje {
     padding-left: 20px;
-    font-size: 1.4em;
-    font-weight: 300;
+    font-size: 1.3em;
+    font-weight: 500;
     color: #fff;
+    text-shadow: 2px 2px 4px #000;
 }
 
-/* Estilos de los output pertenecientes al puntaje */
-
-#dulzura output, #puntaje output {
-    right: 20px;
+/* Barra de energía */
+#barra-energia {
+    width: 200px;
+    height: 20px;
+    border: 2px solid #fff;
+    background: #333;
+    margin: 5px 20px;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-/* Medidas del Canvas */
+#barra-energia .nivel {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #4caf50, #76ff03);
+    transition: width 0.3s;
+}
 
+/* Canvas */
 canvas {
     width: 100%;
     height: 100%;
 }
 
-/* Acompaña a función "cambia-background" en script.js */
-
 #cambia-background {
     background-image: url("Assets/1.png");
     background-size: cover;
     transition: 1s ease-in-out;
-    /* Para compatibilidad con mayoría de navegadores */
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    -webkit-transition: 1s ease-in-out;
-    -moz-transition: 1s ease-in-out;
-    -o-transition: 1s ease-in-out;
-    -ms-transition: 1s ease-in-out;
 }
 
-/* Mensaje del Juego Terminado */
-
+/* Game Over */
 .mensaje {
     font-size: 1.6em;
-    font-weight: 300;
-    color: #223e65;
+    font-weight: 400;
+    color: #c5ff7a;
 }
 
-/* @media responsiva: para pantallas de tamaño standard (width: 480px) de celulares y tablets */
-
+/* Responsive */
 @media (max-width: 480px) {
-    .pantalla-menu {
-        margin-top: 20px;
-    }
-    .pantalla-menu div {
-        margin-top: 5px;
-    }
-    .pantalla-menu .audio-div {
-        padding-right: 25px;
-        margin: 0px !important;
-    }
-    .pantalla-menu .audio-div img {
-        width: 45px;
-        height: 45px;
-    }
-    .pantalla-menu .gran-titulo span {
-        font-size: 2.2em;
-    }
-    .pantalla-menu .gran-titulo p {
-        font-size: 1em;
-    }
-    .pantalla-menu .puntaje {
-        margin: 5px 20px;
-        padding: 5px;
-        font-size: 1.2em;
-    }
-    .pantalla-menu .puntaje .espaciado {
-        margin-right: 0px;
-    }
-    .pantalla-menu .descripcion {
-        font-size: 0.9em;
-        margin: 0px 10px 5px;
-    }
-    .pantalla-menu .botones button {
-        width: 300px;
-        margin-bottom: 10px;
-        font-size: 1.1em;
-    }
-    #dulzura, #puntaje {
-        padding-left: 10px;
-        font-size: 1.2em;
-    }
-    .mensaje {
-        margin: 5px 0px;
-        font-size: 1.2em;
-    }
+    .pantalla-menu { margin-top: 20px; }
+    .pantalla-menu div { margin-top: 5px; }
+    .pantalla-menu .gran-titulo span { font-size: 2em; }
+    .pantalla-menu .gran-titulo p { font-size: 1em; }
+    .pantalla-menu .puntaje { margin: 5px 20px; font-size: 1.2em; }
+    .pantalla-menu .botones button { width: 250px; font-size: 1.1em; }
+    #dulzura, #puntaje { font-size: 1.1em; }
+    .mensaje { font-size: 1.2em; }
 }
+
+

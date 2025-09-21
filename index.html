@@ -3,40 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>El Papá de los Helados 2.0</title>
-    <link rel="icon" type="image/png" href="Assets/Eze.png">
+    <title>Soldado en Misión</title>
+    <link rel="icon" type="image/png" href="Assets/soldado1.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="styles.css" type="text/css">
 </head>
 
 <body>
 
-    <!-- Música del juego -->
-    <audio src="Music/Estopa - Me quedaré.mp3" id="audio" autoplay loop></audio>
+    <!-- Música -->
+    <audio src="Music/marcha_militar.mp3" id="audio" autoplay loop></audio>
 
     <div id="contenedor">
 
-        <!-- Sección Menú Principal -->
-
+        <!-- Menú Principal -->
         <section id="principal">
-
             <div class="pantalla-menu">
                 <div class="audio-div">
                     <img src="Assets/audio_on.png" id="audio-ico" onclick="toggleAudio();">
                 </div>
                 <div class="gran-titulo">
-                    <span>practica de juego</span>
-                    <p>¡Recolecta los helados que caen y... conviértete en el Papá de los Helados!</p>
+                    <span>Entrenamiento Militar</span>
+                    <p>¡Recolecta suministros y sobrevive al campo de batalla!</p>
                 </div>
                 <div class="puntaje">
-                    <div class="espaciado">
-                        Último puntaje:&nbsp
-                        <output></output>
-                    </div>
-                    <div>
-                        Mayor puntaje:&nbsp
-                        <output></output>
-                    </div>
+                    <div class="espaciado">Último puntaje:&nbsp <output></output></div>
+                    <div>Mayor puntaje:&nbsp <output></output></div>
                 </div>
                 <div class="botones">
                     <button id="boton-instrucciones">Instrucciones</button>
@@ -46,54 +38,40 @@
                     <div id="copyleft">
                         <span class="copyright">Todos los derechos 
                             <span>reservados</span>
-                        </span>&nbsp;
-                        <span class="copy">©</span>2025
-                        <span class="color">Ezequiel </span>
+                        </span>&nbsp; <span class="copy">©</span>2025
+                        <span class="color">Ezequiel</span>
                     </div>
                 </div>
             </div>
-
         </section>
 
-        <!-- Sección Instrucciones -->
-
+        <!-- Instrucciones -->
         <section id="instrucciones">
-
             <div id="personajes" data-countstart="2" data-newsprite="500">
 
                 <div class="dentro-instrucciones">
                     <div class="pantalla-menu">
-                        <div class="titulo">
-                            <p>
-                                <b>Eres Ezequiel:</b>
-                            </p>
-                        </div>
+                        <div class="titulo"><p><b>Eres un soldado en misión:</b></p></div>
                         <div class="imagenes">
-                            <img src="Assets/Eze.png" id="eze" data-increase="5">
+                            <img src="Assets/soldado.png" id="eze" data-increase="5">
                         </div>
                         <div class="descripcion">
-                            <p>Quieres convertirte en el
-                                <b>Papá de los Helados</b> de tu pueblo.
-                                <br>Para ello tienes que recolectar todos los helados que puedas.
-                                <br>
-                                <br>Sin embargo tu mamá quiere que comas
-                                <b>brócoli</b>, pero a tí no te apetece...
-                                <br>es por ello que debes evitarlo o perderás dulzura.
-                                <br>
-                                <br>El juego se termina cuando se te acaba la dulzura.
+                            <p>
+                                Debes sobrevivir en el campo de batalla.<br>
+                                Recolecta <b>municiones</b> y <b>botiquines</b>.<br>
+                                Evita las <b>granadas enemigas</b>.<br><br>
+                                El juego termina cuando tu energía llega a cero.
+                            </p>
                         </div>
                         <div class="botones">
                             <button class="proximo">Más</button>
                         </div>
                     </div>
                 </div>
+
                 <div class="dentro-instrucciones">
                     <div class="pantalla-menu">
-                        <div class="titulo">
-                            <p>
-                                <b>Cómo jugar:</b>
-                            </p>
-                        </div>
+                        <div class="titulo"><p><b>Cómo jugar:</b></p></div>
                         <div class="imagenes-direcciones">
                             <div class="derecha">
                                 <div id="eze-derecha"></div>
@@ -105,104 +83,65 @@
                             </div>
                         </div>
                         <div class="descripcion">
-                            <br>Utiliza el mouse o teclado para moverte.</p>
+                            <p>Usa <b>teclas</b> o <b>mouse</b> para moverte.<br>
+                               Pulsa <b>Espacio</b> para disparar.</p>
                         </div>
-                        <div class="botones">
-                            <button class="proximo">Más</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="dentro-instrucciones">
-                    <div class="pantalla-menu">
-                        <div class="titulo">
-                            <p>
-                                <b>Helados:</b>
-                            </p>
-                        </div>
-                        <div class="imagenes">
-                            <img src="Assets/helado_1.png" class="sprite" data-collision="energy:20" data-type="bueno">
-                            <img src="Assets/helado_2.png" class="sprite" data-collision="energy:20" data-type="bueno">
-                            <img src="Assets/helado_3.png" class="sprite" data-collision="energy:20" data-type="bueno">
-                        </div>
-                        <div class="descripcion">
-                            <p>Atrapar alguno te dará 20 puntos de dulzura.
-                                <br> En caso de no lograrlo... ¡perderás 20 puntos!</p>
-                        </div>
-                        <div class="botones">
-                            <button class="proximo">Más</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="dentro-instrucciones">
-                    <div class="pantalla-menu">
-                        <div class="titulo">
-                            <p>
-                                <b>Brócoli:</b>
-                            </p>
-                        </div>
-                        <div class="imagenes">
-                            <img src="Assets/broccoli.png" class="sprite" data-collision="energy:-50" data-type="malo">
-                        </div>
-                        <div class="descripcion">
-                            <p>Si por error lo atrapas, te quitará 50 puntos dulzura.</p>
-                        </div>
-                        <div class="botones">
-                            <button class="fin-instrucciones">Volver al menú</button>
-                        </div>
+                        <div class="botones"><button class="proximo">Más</button></div>
                     </div>
                 </div>
 
+                <div class="dentro-instrucciones">
+                    <div class="pantalla-menu">
+                        <div class="titulo"><p><b>Suministros:</b></p></div>
+                        <div class="imagenes">
+                            <img src="Assets/municion.png" class="sprite" data-collision="energy:20" data-type="bueno">
+                            <img src="Assets/botiquin.png" class="sprite" data-collision="energy:20" data-type="bueno">
+                        </div>
+                        <div class="descripcion"><p>Te dan +20 de energía. Si los pierdes, -20.</p></div>
+                        <div class="botones"><button class="proximo">Más</button></div>
+                    </div>
+                </div>
+
+                <div class="dentro-instrucciones">
+                    <div class="pantalla-menu">
+                        <div class="titulo"><p><b>Granadas:</b></p></div>
+                        <div class="imagenes">
+                            <img src="Assets/granada.png" class="sprite" data-collision="energy:-50" data-type="malo">
+                        </div>
+                        <div class="descripcion"><p>Si la atrapas, pierdes 50 de energía.</p></div>
+                        <div class="botones"><button class="fin-instrucciones">Volver al menú</button></div>
+                    </div>
+                </div>
             </div>
-
         </section>
 
-        <!-- Sección Juego -->
-
+        <!-- Juego -->
         <section id="juego">
-
             <div id="puntaje-info">
-                <div id="dulzura">Dulzura:&nbsp
-                    <output>
-                        100
-                    </output>
-                </div>
-                <div id="puntaje">Puntaje:&nbsp
-                    <output>
-                    </output>
-                </div>
+                <div id="dulzura">Energía:&nbsp <output>100</output></div>
+                <div id="barra-energia"><div class="nivel"></div></div>
+                <div id="puntaje">Puntaje:&nbsp <output></output></div>
             </div>
             <div id="cambia-background">
                 <canvas></canvas>
             </div>
-
         </section>
 
-        <!-- Sección Juego Terminado -->
-
+        <!-- Game Over -->
         <section id="juego-terminado">
-
             <div class="pantalla-menu">
-                <div class="titulo">
-                    <p>¡Juego Terminado!</p>
-                </div>
-                <div class="puntaje">
-                    Tu puntaje:&nbsp
-                    <output></output>
-                </div>
+                <div class="titulo"><p>¡Misión Terminada!</p></div>
+                <div class="puntaje">Tu puntaje:&nbsp <output></output></div>
                 <div class="descripcion">
-                    <p class="mensaje" data-highscore="¡Nuevo Puntaje Máximo!"></p>
+                    <p class="mensaje" data-highscore="¡Nuevo récord militar!"></p>
                 </div>
-                <div class="botones">
-                    <button id="jugar-de-nuevo">Jugar de nuevo</button>
-                </div>
+                <div class="botones"><button id="jugar-de-nuevo">Intentar de nuevo</button></div>
             </div>
-
         </section>
 
     </div>
 
-    <script src="scripts.js" type='text/javascript'></script>
+    <script src="scripts.js" type="text/javascript"></script>
 
 </body>
-
 </html>

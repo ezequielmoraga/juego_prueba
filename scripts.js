@@ -1,35 +1,25 @@
 (function () {
 
-    /*
-    Elementos del DOM (Estructura Lógica, se ubican los Objetos que serán modificados)
-    */
-
-    var contenedor = $('#contenedor'), // $ -> Identifica los ID en etiquetas dentro del HTML
+    // DOM
+    var contenedor = $('#contenedor'),
         juego = $('#juego'),
-        player = $('#eze'),
         principal = $('#principal'),
         instrucciones = $('#instrucciones'),
-        muestraScore = $('#puntaje output'),
-        muestraDulzura = $('#dulzura output'),
-        canvas = $('canvas'),
+        muestraScore = document.querySelector('#puntaje output'),
+        muestraDulzura = document.querySelector('#dulzura output'),
+        canvas = document.querySelector('canvas'),
         terminado = $('#juego-terminado'),
-        msjJuegoTerminado = terminado.querySelector('.mensaje'),
+        msjJuegoTerminado = terminado ? terminado.querySelector('.mensaje') : null,
         personajes = document.querySelectorAll('div.dentro-instrucciones'),
-        ctx = canvas.getContext('2d'),
-        comienzaDulzura = +muestraDulzura.innerHTML;
+        ctx = canvas.getContext('2d');
 
-    /*
-    Datos del Juego
-    */
+    // Jugador
+    var playerImg = document.getElementById('eze');
+    var comienzaDulzura = muestraDulzura ? +muestraDulzura.innerHTML : 100;
 
-    var puntajes = {
-        energy: comienzaDulzura
-    },
-        playerIncrease = +player.getAttribute('data-increase');
-
-    /*
-    Contadores
-    */
+    // Estados
+    var puntajes = { energy: comienzaDulzura },
+        playerIncrease = +(playerImg.getAttribute('data-increase') || 8);
 
     var puntaje = 0,
         estadoDelJuego = null,
@@ -40,41 +30,38 @@
         ahora = 0,
         viejo = null,
         playerY = 0,
-        offset = 0, // Offset se refiere a la distancia (desplazamiento) desde el inicio hasta cierto elemento dentro de un array
+        offset = 0,
         width = 0,
         height = 0,
         incrementeNivel = 0,
-        i = 0,
-        scoresGuardados = null,
-        iniciaSprites = 0,
-        nuevoSprite = 500,
+        scoresGuardados = { last: 0, high: 0 },
+        iniciaSprites = 5,
+        nuevoSprite = 5000,   // más puntos antes de nuevos objetos
         izquierdaAbajo = false,
         derechaAbajo = false;
 
-    /*
-    Configuracion del juego
-    */
+    // Balas
+    var balas = [];
+    var velocidadBala = 7;
 
+    // Control de disparo
+    var ultimoDisparo = 0;
+    var cooldownDisparo = 300; // ms
+
+    // Escala del jugador
+    var scaleFactor = 0.4;
+
+    // ====== INICIO ======
     function inicia() {
-        var actual,
-            spriteData,
-            informacionPuntaje,
-            i,
-            j;
-
-        /*
-        Trae el Sprite del HTML
-        */
-
-        spriteData = document.querySelectorAll('img.sprite');
-        i = spriteData.length;
+        var spriteData = document.querySelectorAll('img.sprite');
+        var i = spriteData.length;
         while (i--) {
-            actual = {};
+            var actual = {};
             actual.efectos = [];
             actual.img = spriteData[i];
             actual.offset = spriteData[i].offsetWidth / 2;
-            informacionPuntaje = spriteData[i].getAttribute('data-collision').split(',');
-            j = informacionPuntaje.length;
+            var informacionPuntaje = spriteData[i].getAttribute('data-collision').split(',');
+            var j = informacionPuntaje.length;
             while (j--) {
                 var valorTecla = informacionPuntaje[j].split(':');
                 actual.efectos.push({
@@ -85,183 +72,89 @@
             actual.type = spriteData[i].getAttribute('data-type');
             listaSprites.push(actual);
         }
-        contadorSprite = listaSprites.length;
-        iniciaSprites = +$('#personajes').getAttribute('data-countstart');
-        nuevoSprite = +$('#personajes').getAttribute('data-newsprite');
-
-        /*
-        Habilita el teclado en el juego
-        */
+        contadorSprite = spriteData.length;
 
         contenedor.tabIndex = -1;
         contenedor.focus();
-
-        /*
-        Asigna Manejadores de Eventos
-        */
 
         contenedor.addEventListener('keydown', enTeclaAbajo, false);
         contenedor.addEventListener('keyup', enTeclaArriba, false);
         contenedor.addEventListener('click', enClick, false);
         contenedor.addEventListener('mousemove', enMovimientoMouse, false);
 
-        /*
-        scoreGuardados sirve para guardar los últimos puntajes obtenidos
-        */
-
-        scoresGuardados = { last: 0, high: 0 };
-
-        /*
-        Muestra la introduccion
-        */
-
         muestraPrincipio();
-
     };
 
-    /*
-    Función para cambiar el background durante el juego
-    almacena en una array los diferentes assets de fondo de pantalla del juego
-    */
-
-    function cambiaBackground() {
-        var imagenes = ['Assets/2.png', 'Assets/3.png', 'Assets/4.png', 'Assets/5.png', 'Assets/6.png', 'Assets/7.png', 'Assets/8.png']
-
-        setInterval(function () {
-
-            document.getElementById("cambia-background").style.backgroundImage = "url('" + imagenes[0] + "')";
-
-            var primerValor = imagenes.shift();
-            imagenes.push(primerValor);
-
-        }, 12000);
-
-    }
-
-    /*
-    Manejo de Clicks 
-    */
-
+    // ====== EVENTOS ======
     function enClick(ev) {
         var t = ev.target;
-        if (estadoDelJuego === 'juego-terminado') {
-            if (t.id === 'jugar-de-nuevo') {
-                muestraPrincipio();
-            }
+        if (estadoDelJuego === 'juego-terminado' && t.id === 'jugar-de-nuevo') {
+            muestraPrincipio();
         }
-        if (t.className === 'proximo') {
-            instruccionesSiguiente();
-        }
-        if (t.className === 'fin-instrucciones') {
-            instruccionesListo();
-        }
-        if (t.id === 'boton-instrucciones') {
-            mostrarInstrucciones();
-        }
-        if (t.id === 'boton-jugar') {
-            juegoEmpieza(),
-                cambiaBackground();
-        }
+        if (t.className === 'proximo') { instruccionesSiguiente(); }
+        if (t.className === 'fin-instrucciones') { instruccionesListo(); }
+        if (t.id === 'boton-instrucciones') { mostrarInstrucciones(); }
+        if (t.id === 'boton-jugar') { juegoEmpieza(); }
         ev.preventDefault();
     }
 
-    /*
-    Manejo de Teclado
-    */
-
     function enTeclaAbajo(ev) {
-
-        /*
-        Detecta el evento de que el usuario está utilizando el teclado
-        y compara con los códigos ASCII del teclado para asignarle la función que corresponda
-        */
-
-        if (ev.keyCode === 39) {
-            izquierdaAbajo = true;
-        }
-        else if (ev.keyCode === 37) {
-            derechaAbajo = true;
+        if (ev.keyCode === 39) { derechaAbajo = true; }
+        else if (ev.keyCode === 37) { izquierdaAbajo = true; }
+        else if (ev.keyCode === 32) {
+            ev.preventDefault();  // 👈 evita scroll/reload con barra
+            disparar();
         }
     }
+
     function enTeclaArriba(ev) {
-        if (ev.keyCode === 39) {
-            izquierdaAbajo = false;
-        }
-        else if (ev.keyCode === 37) {
-            derechaAbajo = false;
+        if (ev.keyCode === 39) { derechaAbajo = false; }
+        else if (ev.keyCode === 37) { izquierdaAbajo = false; }
+        else if (ev.keyCode === 32) {
+            ev.preventDefault();  // 👈 evita scroll/reload también al soltar
         }
     }
-
-    /*
-    Manejo del Mouse
-    */
 
     function enMovimientoMouse(ev) {
         var mx = ev.clientX - contenedor.offsetLeft;
-        if (mx < offset) {
-            mx = offset;
-        }
-        if (mx > width - offset) {
-            mx = width - offset;
-        }
+        if (mx < offset) { mx = offset; }
+        if (mx > width - offset) { mx = width - offset; }
         x = mx;
     }
 
-    /*
-    Introduccion
-    */
-
+    // ====== PANTALLAS ======
     function muestraPrincipio() {
         setActual(principal);
         estadoDelJuego = 'principal';
-        var scoreelms = principal.querySelectorAll('output');
-        scoreelms[0].innerHTML = scoresGuardados.last;
-        scoreelms[1].innerHTML = scoresGuardados.high;
+        if (principal) {
+            var scoreelms = principal.querySelectorAll('output');
+            if (scoreelms[0]) scoreelms[0].innerHTML = scoresGuardados.last;
+            if (scoreelms[1]) scoreelms[1].innerHTML = scoresGuardados.high;
+        }
     }
-
-    /*
-    Muestra las instrucciones
-    */
 
     function mostrarInstrucciones() {
         setActual(instrucciones);
         estadoDelJuego = 'instrucciones';
         ahora = 0;
-        personajes[ahora].className = 'current';
+        if (personajes[ahora]) personajes[ahora].className = 'current';
     }
 
-    /*
-    Movimientos del Personaje
-    */
-
-    /*
-    Acción cuando se activa Izquierda
-    */
-
     function instruccionesListo() {
-        personajes[ahora].className = 'dentro-instrucciones';
+        if (personajes[ahora]) personajes[ahora].className = 'dentro-instrucciones';
         ahora = 0;
         muestraPrincipio();
     }
 
-    /*
-    Acción cuando se activa Derecha
-    */
-
     function instruccionesSiguiente() {
-        if (personajes[ahora + 1]) {
-            ahora = ahora + 1;
-        }
+        if (personajes[ahora + 1]) { ahora = ahora + 1; }
         if (personajes[ahora]) {
             personajes[ahora - 1].className = 'dentro-instrucciones';
             personajes[ahora].className = 'current';
         }
     }
 
-    /*
-    Prepara el juego para empezar y setea los valores
-    */
-
+    // ====== JUEGO ======
     function juegoEmpieza() {
         setActual(juego);
         estadoDelJuego = 'jugando';
@@ -270,143 +163,110 @@
         height = juego.offsetHeight;
         canvas.width = width;
         canvas.height = height;
-        playerY = height - player.offsetHeight;
-        offset = player.offsetWidth / 2;
+        playerY = height - playerImg.height * scaleFactor;
+        offset = (playerImg.width * scaleFactor) / 2;
         x = width / 2;
         sprites = [];
-        for (i = 0; i < iniciaSprites; i++) {
+        balas = [];
+        for (var i = 0; i < iniciaSprites; i++) {
             sprites.push(agregaSprite());
         }
         puntajes.energy = comienzaDulzura;
         incrementeNivel = 0;
         puntaje = 0;
-        muestraDulzura.innerHTML = comienzaDulzura;
+        if (muestraDulzura) muestraDulzura.innerHTML = comienzaDulzura;
         ciclo();
     }
-
-    /*
-    Bucle Principal del Juego
-    */
 
     function ciclo() {
         ctx.clearRect(0, 0, width, height);
 
-        /*
-        Renderiza y actualiza Sprites
-        */
-
-        j = sprites.length;
-        for (i = 0; i < j; i++) {
+        // Sprites
+        for (var i = 0; i < sprites.length; i++) {
             sprites[i].render();
             sprites[i].update();
         }
 
-        /*
-        Muestra puntajes
-        */
+        // Balas
+        for (let b = 0; b < balas.length; b++) {
+            let bala = balas[b];
+            bala.y -= velocidadBala;
+            ctx.drawImage(bala.img, bala.x, bala.y);
 
-        muestraDulzura.innerHTML = puntajes.energy;
-        muestraScore.innerHTML = ~~(puntaje / 10);
+            for (let s = 0; s < sprites.length; s++) {
+                if (sprites[s].type === "malo" && colision(bala, sprites[s])) {
+                    seteaDataSprite(sprites[s]);
+                    balas.splice(b, 1);
+                    b--;
+                    puntaje += 100;
+                    break;
+                }
+            }
+            if (bala.y < 0) { balas.splice(b, 1); b--; }
+        }
+
+        // HUD
+        if (muestraDulzura) muestraDulzura.innerHTML = puntajes.energy;
+        var barra = document.querySelector('#barra-energia .nivel');
+        if (barra) barra.style.width = puntajes.energy + "%";
+        if (muestraScore) muestraScore.innerHTML = ~~(puntaje / 10);
         puntaje++;
 
-        /*
-        Cuando aumenta puntaje agrega más Sprites
-        */
-
         if (~~(puntaje / nuevoSprite) > incrementeNivel) {
-            sprites.push(agregaSprite());
+            if (sprites.length < 5) {
+                sprites.push(agregaSprite());
+            }
             incrementeNivel++;
         }
 
-        /*
-        Posicion Jugador
-        */
+        if (izquierdaAbajo) { jugadorIzquierda(); }
+        if (derechaAbajo) { jugadorDerecha(); }
 
-        if (izquierdaAbajo) {
-            jugadorDerecha();
-        }
-        if (derechaAbajo) {
-            jugadorIzquierda();
-        }
-
+        // Jugador con escala
         ctx.save();
         ctx.translate(x - offset, playerY);
-        ctx.drawImage(player, 0, 0);
+        ctx.drawImage(playerImg, 0, 0, playerImg.width * scaleFactor, playerImg.height * scaleFactor);
         ctx.restore();
 
-        /*
-          Cuando aun tienes dulzura, renderiza siguiente instruccion, sino Juego Terminado
-        */
-
         puntajes.energy = Math.min(puntajes.energy, 100);
-        if (puntajes.energy > 0) {
-            requestAnimationFrame(ciclo);
-        } else {
-            juegoTerminado();
-        }
-
+        if (puntajes.energy > 0) requestAnimationFrame(ciclo);
+        else juegoTerminado();
     };
-
-    /*
-    Acción cuando se activa la izquierda
-    */
 
     function jugadorIzquierda() {
         x -= playerIncrease;
-        if (x < offset) {
-            x = offset;
-        }
+        if (x < offset) x = offset;
     }
-
-    /*
-    Accion cuando se activa la derecha
-    */
 
     function jugadorDerecha() {
         x += playerIncrease;
-        if (x > width - offset) {
-            x = width - offset;
-        }
+        if (x > width - offset) x = width - offset;
     }
-
-    /*
-    Juego Terminado
-    */
 
     function juegoTerminado() {
         document.body.className = 'juego-terminado';
         setActual(terminado);
         estadoDelJuego = 'juego-terminado';
         var nowscore = ~~(puntaje / 10);
-        terminado.querySelector('output').innerHTML = nowscore;
+        if (terminado) terminado.querySelector('output').innerHTML = nowscore;
         scoresGuardados.last = nowscore;
         if (nowscore > scoresGuardados.high) {
-            msjJuegoTerminado.innerH9TML = msjJuegoTerminado.getAttribute('data-highscore');
+            if (msjJuegoTerminado) msjJuegoTerminado.innerHTML = msjJuegoTerminado.getAttribute('data-highscore');
             scoresGuardados.high = nowscore;
         }
     }
 
-    /*
-    Sistema de Sprite de Personajes
-    */
-
+    // ====== SPRITES ======
     function sprite() {
-        this.px = 0;
-        this.py = 0;
-        this.vx = 0;
-        this.vy = 0;
-        this.bueno = false;
-        this.height = 0;
-        this.width = 0;
-        this.efectos = [];
+        this.px = 0; this.py = 0; this.vx = 0; this.vy = 0;
+        this.height = 0; this.width = 0; this.efectos = [];
         this.img = null;
         this.update = function () {
-            this.px += this.vx;
-            this.py += this.vy;
+            this.px += this.vx; this.py += this.vy;
             if (~~(this.py + 10) > playerY) {
                 if ((x - offset) < this.px && this.px < (x + offset)) {
                     this.py = -200;
-                    i = this.efectos.length;
+                    var i = this.efectos.length;
                     while (i--) {
                         puntajes[this.efectos[i].efecto] += +this.efectos[i].value;
                     }
@@ -417,7 +277,7 @@
             }
             if (this.py > height + 100) {
                 if (this.type === 'bueno') {
-                    i = this.efectos.length;
+                    var i = this.efectos.length;
                     while (i--) {
                         puntajes[this.efectos[i].efecto] -= +this.efectos[i].value;
                     }
@@ -440,10 +300,6 @@
         return s;
     };
 
-    /*
-    Obtiene los Sprites para mostrarlos por pantalla
-    */
-
     function seteaDataSprite(sprite) {
         var r = ~~rand(0, contadorSprite);
         sprite.img = listaSprites[r].img;
@@ -455,39 +311,19 @@
         sprite.py = -100;
         sprite.px = rand(sprite.width / 2, width - sprite.width / 2);
         sprite.vx = rand(-1, 2);
-        sprite.vy = rand(1, 5);
+        sprite.vy = rand(0.5, 1.2);   // más lento
     };
 
-    /*
-    Seleccionador de Query
-    */
+    // ====== UTILS ======
+    function $(str) { return document.querySelector(str); }
+    function rand(min, max) { return ((Math.random() * (max - min)) + min); }
 
-    function $(str) {
-        return document.querySelector(str);
-    };
-
-    /*
-    Obtiene número random entre un minimo y máximo
-    */
-
-    function rand(min, max) {
-        return ((Math.random() * (max - min)) + min);
-    };
-
-    /*
-    Muestra parte actual del juego y oculta la anterior
-    */
     function setActual(elm) {
-        if (viejo) {
-            viejo.className = '';
-        }
+        if (!elm) return;
+        if (viejo) viejo.className = '';
         elm.className = 'current';
         viejo = elm;
     };
-
-    /*
-    Detecta y Setea requestAnimationFrame
-    */
 
     if (!window.requestAnimationFrame) {
         window.requestAnimationFrame = (function () {
@@ -495,36 +331,42 @@
                 window.mozRequestAnimationFrame ||
                 window.oRequestAnimationFrame ||
                 window.msRequestAnimationFrame ||
-                function (callback, element) {
-                    window.setTimeout(callback, 1000 / 60);
-                };
+                function (callback) { window.setTimeout(callback, 1000 / 60); };
         })();
     }
 
-    /*
-    Ejecutar
-    */
-
     inicia();
+
+    // ====== DISPARO ======
+    function disparar() {
+        var ahora = Date.now();
+        if (ahora - ultimoDisparo < cooldownDisparo) return; // 👈 evita disparos seguidos
+        ultimoDisparo = ahora;
+
+        var bala = { x: x, y: playerY, width: 10, height: 20, img: new Image() };
+        bala.img.src = "Assets/bala.png";
+        balas.push(bala);
+    }
+
+    function colision(a, b) {
+        return (
+            a.x < b.px + b.width &&
+            a.x + a.width > b.px &&
+            a.y < b.py + b.height &&
+            a.y + a.height > b.py
+        );
+    }
+
 })();
 
-/*
-Función para activar/desactivar el audio
-*/
-
-var toggleIcoAudio = 0,
-    audio = document.getElementById("audio");
-
+// ====== AUDIO ======
+var toggleIcoAudio = 0, audio = document.getElementById("audio");
 function toggleAudio() {
-
     if (toggleIcoAudio == 0) {
         document.getElementById("audio-ico").setAttribute('src', 'Assets/audio_mute.png');
-        toggleIcoAudio++;
-        audio.pause();
-    }
-    else {
+        toggleIcoAudio++; audio.pause();
+    } else {
         document.getElementById("audio-ico").setAttribute('src', 'Assets/audio_on.png');
-        toggleIcoAudio--;
-        audio.play();
+        toggleIcoAudio--; audio.play();
     }
 }
